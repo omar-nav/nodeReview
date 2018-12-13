@@ -1,5 +1,4 @@
 import axios from 'axios';
-
 import dompurify from 'dompurify';
 
 function searchResultsHTML(stores) {
@@ -18,7 +17,7 @@ function typeAhead(search) {
   const searchInput = search.querySelector('input[name="search"]');
   const searchResults = search.querySelector('.search__results');
 
-  searchInput.on('input', function () {
+  searchInput.on('input', function() {
     // if there is no value, quit it!
     if (!this.value) {
       searchResults.style.display = 'none';
@@ -45,9 +44,9 @@ function typeAhead(search) {
 
   // handle keyboard inputs
   searchInput.on('keyup', (e) => {
-    // ignore with up down or enter
+    // if they aren't pressing up, down or enter, who cares!
     if (![38, 40, 13].includes(e.keyCode)) {
-      return; // skip it!!
+      return; // nah
     }
     const activeClass = 'search__result--active';
     const current = search.querySelector(`.${activeClass}`);
@@ -60,7 +59,7 @@ function typeAhead(search) {
     } else if (e.keyCode === 38 && current) {
       next = current.previousElementSibling || items[items.length - 1]
     } else if (e.keyCode === 38) {
-      next = items[items.length - 1]
+      next = items[items.length - 1];
     } else if (e.keyCode === 13 && current.href) {
       window.location = current.href;
       return;
