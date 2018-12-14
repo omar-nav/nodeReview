@@ -3,8 +3,7 @@ import { $ } from './bling';
 
 function ajaxHeart(e) {
   e.preventDefault();
-  console.log('HEART ITTT!!!!!!!!!!!!!!!!');
-  console.log(this);
+  console.log('DALE CORAZÓNCITO!!!!!!!!!!!!');
   axios
     .post(this.action)
     .then(res => {

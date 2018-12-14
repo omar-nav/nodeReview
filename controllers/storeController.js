@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const User = mongoose.model('User');
 const Store = mongoose.model('Store');
 const multer = require('multer');
 const jimp = require('jimp');
@@ -8,7 +9,7 @@ const multerOptions = {
   storage: multer.memoryStorage(),
   fileFilter(req, file, next) {
     const isPhoto = file.mimetype.startsWith('image/');
-    if(isPhoto) {
+    if (isPhoto) {
       next(null, true);
     } else {
       next({ message: 'That filetype isn\'t allowed!' }, false);
@@ -105,20 +106,20 @@ exports.getStoresByTag = async (req, res) => {
 
 exports.searchStores = async (req, res) => {
   const stores = await Store
-  // first find stores that match
-  .find({
-    $text: {
-      $search: req.query.q
-    }
-  }, {
-    score: { $meta: 'textScore' }
-  })
-  // the sort them
-  .sort({
-    score: { $meta: 'textScore' }
-  })
-  // limit to only 5 results
-  .limit(5);
+    // first find stores that match
+    .find({
+      $text: {
+        $search: req.query.q
+      }
+    }, {
+        score: { $meta: 'textScore' }
+      })
+    // the sort them
+    .sort({
+      score: { $meta: 'textScore' }
+    })
+    // limit to only 5 results
+    .limit(5);
   res.json(stores);
 };
 
@@ -143,3 +144,14 @@ exports.mapStores = async (req, res) => {
 exports.mapPage = (req, res) => {
   res.render('map', { title: 'Map' });
 };
+
+exports.heartStore = async (req, res) => {
+  const hearts = req.user.hearts.map(obj => obj.toString());
+  const operator = hearts.includes(req.params.id) ? '$pull' : '$addToSet';
+  const user = await User
+    .findByIdAndUpdate(req.user._id,
+      { [operator]: { hearts: req.params.id } },
+      { new: true }
+    )
+  res.json(user);
+}
