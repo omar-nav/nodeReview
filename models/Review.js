@@ -13,6 +13,7 @@ const reviewSchema = new mongoose.Schema({
   },
   store: {
     type: mongoose.Schema.ObjectId,
+    ref: 'Store',
     required: 'You must supply a store!'
   },
   text: {
@@ -25,5 +26,13 @@ const reviewSchema = new mongoose.Schema({
     max: 5
   }
 });
+
+function autopopulate(next) {
+  this.populate('author');
+  next();
+}
+
+reviewSchema.pre('find', autopopulate);
+reviewSchema.pre('findOne', autopopulate);
 
 module.exports = mongoose.model('Review', reviewSchema);

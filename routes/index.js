@@ -58,6 +58,8 @@ router.post('/reviews/:id',
   catchErrors(reviewController.addReview)
 );
 
+router.get('/top', catchErrors(storeController.getTopStores));
+
 /*
   API
 */
@@ -65,6 +67,5 @@ router.post('/reviews/:id',
 router.get('/api/search', catchErrors(storeController.searchStores));
 router.get('/api/stores/near', catchErrors(storeController.mapStores));
 router.post('/api/stores/:id/heart', catchErrors(storeController.heartStore));
-
 
 module.exports = router;
